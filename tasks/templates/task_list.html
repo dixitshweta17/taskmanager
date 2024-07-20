@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@100&family=Montserrat:wght@100&display=swap" rel="stylesheet">
+    <style>
+        /* Existing styles */
+        body {
+            background: #000000; 
+            background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027); 
+            background: linear-gradient(to right, #2C5364, #203A43, #0F2027); 
+            font-family: 'Montserrat', sans-serif; 
+            color: #000000; /* Black text color */
+        }
+        .container {
+            width: 60%;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            color: #000000; /* Black text color inside container */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+        h1 {
+            color: #000000; /* Black color for headers */
+        }
+        .alert {
+            margin-top: 20px;
+            color: #000000; /* Black color for alert text */
+        }
+        /* New styles for table text color */
+        .table td, .table th {
+            color: #000000; /* Black color for table text */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Task List</h1>
+        {% if tasks %}
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Due Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                    <tr>
+                        <td>{{ task.title }}</td>
+                        <td>{{ task.description }}</td>
+                        <td>{{ task.status_choice }}</td>
+                        <td>{{ task.due_date }}</td>
+                        <td>
+                            <a href="{% url 'task-detail' task.id %}" class="btn btn-primary">View</a>
+                            <form method="post" action="{% url 'task-detail' task.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="alert alert-info">No tasks available.</div>
+        {% endif %}
+        <a href="{% url 'task-create' %}" class="btn btn-primary">Create New Task</a>
+    </div>
+</body>
+</html>
